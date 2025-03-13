@@ -1,0 +1,49 @@
+name: Deploy and Run Lambda
+
+on:
+  workflow_run:
+    workflows: ["Zip and Upload to S3"]
+    types:
+      - completed
+
+jobs:
+  deploy-and-run-lambda:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Deploy Lambda Function
+      run: |
+        aws lambda update-function-code \
+          --function-name MyLambdaFunction \
+          --s3-bucket my-lambda-bucket \
+          --s3-key lambda_function.zip
+
+    - name: Prepare Payload from Event JSON
+      run: |
+        cat events/event.json
+        payload=$(cat events/event.json | jq -c '.')
+        echo $payload > payload.json
+
+    - name: Run Lambda Function with Payload
+      run: |
+        aws lambda invoke \
+          --function-name MyLambdaFunction \
+          --payload file://payload.json \
+          response.json
+        cat response.json
+
+    - name: Show CloudWatch Logs
+      run: |
+        aws logs describe-log-groups
+        aws logs describe-log-streams --log-group-name /aws/lambda/MyLambdaFunction
+        aws logs get-log-events --log-group-name /aws/lambda/MyLambdaFunction --log-stream-name $(aws logs describe-log-streams --log-group-name /aws/lambda/MyLambdaFunction --query "logStreams[0].logStreamName" --output text)
