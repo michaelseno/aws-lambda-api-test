@@ -26,5 +26,5 @@ jobs:
 
     - name: Upload to S3
       run: |
-        aws s3 cp lambda_function.zip s3://api-lambda-artifact/function.zip
+        aws s3 cp lambda_function.zip s3://api-lambda-artifact/lambda_function.zip
 
