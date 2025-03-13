@@ -10,13 +10,16 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     results = []
 
-    # Check if the event is a list of multiple events
-    if isinstance(event, list):
-        logger.info(f"Received multiple events: {len(event)}")
-        events = event
-    else:
-        logger.info("Received single event")
-        events = [event]
+    # Check for the 'events' key and ensure it's a list
+    events = event.get("events", [])
+    if not isinstance(events, list):
+        logger.error("Invalid input format. Expected 'events' to be a list.")
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Invalid input format"})
+        }
+
+    logger.info(f"Received {len(events)} events.")
 
     for i, single_event in enumerate(events):
         url = single_event.get("url", single_event.get("url"))
@@ -33,13 +36,8 @@ def lambda_handler(event, context):
             logger.info(f"Response status code: {status_code}")
             logger.info(f"Response body: {json.dumps(body)}")
 
-            if status_code == expected_status:
-                result = "Success"
-                logger.info(f"Status check successful for event {i + 1}")
-            else:
-                result = "Failure"
-                logger.warning(f"Status check failed for event {i + 1} - url: {url}. Expected {expected_status}, got {status_code}")
-
+            result = "Success" if status_code == expected_status else "Failure"
+            logger.info(f"Result for event {i + 1}: {result}")
             results.append({
                 "statusCode": status_code,
                 "body": {

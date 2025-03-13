@@ -37,6 +37,7 @@ jobs:
     - name: Run Lambda Function with Payload
       run: |
         payload=$(jq -c '.' events/event.json)
+        echo "Payload: $payload"
         aws lambda invoke \
           --function-name MyGitHubLambdaFunction \
           --payload "$payload" \
