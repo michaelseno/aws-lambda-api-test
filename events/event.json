@@ -1,14 +1,16 @@
-[
+{
+  "events": [
     {
-        "url": "https://jsonplaceholder.typicode.com/posts/1",
-        "expected_status": 200
+      "url": "https://jsonplaceholder.typicode.com/posts/1",
+      "expected_status": 200
     },
     {
-        "url": "https://jsonplaceholder.typicode.com/posts/2",
-        "expected_status": 200
+      "url": "https://jsonplaceholder.typicode.com/posts/2",
+      "expected_status": 200
     },
     {
-        "url": "https://jsonplaceholder.typicode.com/posts/404",
-        "expected_status": 404
+      "url": "https://jsonplaceholder.typicode.com/posts/404",
+      "expected_status": 404
     }
-]
+  ]
+}
