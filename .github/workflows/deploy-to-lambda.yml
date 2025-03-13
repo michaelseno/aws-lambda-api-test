@@ -39,7 +39,7 @@ jobs:
         payload=$(jq -c '.' events/event.json)
         echo "Payload: $payload"
         aws lambda invoke \
-          --function-name MyLambdaFunction \
+          --function-name MyGitHubLambdaFunction \
           --payload "$payload" \
           response.json
         cat response.json
