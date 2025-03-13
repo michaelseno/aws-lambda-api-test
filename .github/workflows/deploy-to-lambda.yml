@@ -24,8 +24,8 @@ jobs:
     - name: Deploy Lambda Function
       run: |
         aws lambda update-function-code \
-          --function-name MyLambdaFunction \
-          --s3-bucket my-lambda-bucket \
+          --function-name MyGitHubLambdaFunction \
+          --s3-bucket api-lambda-artifact \
           --s3-key lambda_function.zip
 
     - name: Prepare Payload from Event JSON
@@ -37,7 +37,7 @@ jobs:
     - name: Run Lambda Function with Payload
       run: |
         aws lambda invoke \
-          --function-name MyLambdaFunction \
+          --function-name MyGitHubLambdaFunction \
           --payload file://payload.json \
           response.json
         cat response.json
@@ -45,5 +45,5 @@ jobs:
     - name: Show CloudWatch Logs
       run: |
         aws logs describe-log-groups
-        aws logs describe-log-streams --log-group-name /aws/lambda/MyLambdaFunction
-        aws logs get-log-events --log-group-name /aws/lambda/MyLambdaFunction --log-stream-name $(aws logs describe-log-streams --log-group-name /aws/lambda/MyLambdaFunction --query "logStreams[0].logStreamName" --output text)
+        aws logs describe-log-streams --log-group-name /aws/lambda/MyGitHubLambdaFunction
+        aws logs get-log-events --log-group-name /aws/lambda/MyGitHubLambdaFunction --log-stream-name $(aws logs describe-log-streams --log-group-name /aws/lambda/MyGitHubLambdaFunction --query "logStreams[0].logStreamName" --output text)
