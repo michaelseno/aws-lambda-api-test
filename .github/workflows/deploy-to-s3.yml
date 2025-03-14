@@ -21,8 +21,14 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Zip Lambda Function
-      run: zip -r lambda_function.zip lambda_function.py
+    - name: Install Dependencies and zip Lambda Function
+      run: |
+        mkdir -p package
+        pip install -r requirements.txt -t package
+        cp lambda_function.py package/
+        cd package
+        zip -r ../lambda_function.zip .
+        cd ..
 
     - name: Upload to S3
       run: |
