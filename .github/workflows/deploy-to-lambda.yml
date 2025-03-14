@@ -28,6 +28,12 @@ jobs:
           --s3-bucket api-lambda-artifact \
           --s3-key lambda_function.zip
 
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        mkdir -p package
+        pip install -r requirements.txt --target ./package
+
     - name: Prepare Payload from Event JSON
       run: |
         cat events/event.json
