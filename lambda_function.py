@@ -1,5 +1,5 @@
 import json
-import requests
+from botocore.vendored import requests
 import logging
 
 # Set up logging
