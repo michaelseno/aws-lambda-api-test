@@ -9,6 +9,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     results = []
+    status_code = 0
 
     # Check for the 'events' key and ensure it's a list
     events = event.get("events", [])
@@ -19,12 +20,12 @@ def lambda_handler(event, context):
             "body": json.dumps({"error": "Invalid input format"})
         }
 
-    logger.info(f"Received {len(events)} events.")
+    logger.info(f"Received {len(events)} event(s).")
 
     for i, single_event in enumerate(events):
         url = single_event.get("url", single_event.get("url"))
-        expected_status = single_event.get("expected_status", single_event.get("expected_status"))
-
+        expected_status = single_event.get("expected_status",
+                                           single_event.get("expected_status"))
         logger.info(f"Processing event {i + 1}/{len(events)}")
         logger.info(f"Requesting URL: {url}")
 
@@ -53,9 +54,12 @@ def lambda_handler(event, context):
                 "statusCode": 500,
                 "body": {"error": str(e)}
             })
+            return {
+                "statusCode": 500,
+                "body": json.dumps({"results": results})
+            }
 
     return {
-        "statusCode": 200,
+        "statusCode": status_code,
         "body": json.dumps({"results": results})
     }
-
