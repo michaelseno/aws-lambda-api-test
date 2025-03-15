@@ -20,14 +20,17 @@ jobs:
         with:
           python-version: '3.9'
 
-      # Step 3: Install dependencies
+      # Step 3: Enable virtual env
+      - name: Activate .venv
+        run: source venv/bin/activate
+
+      # Step 4: Install dependencies
       - name: Install Dependencies
         run: python3 -m pip install -r requirements.txt
 
-      # Step 4: Linting
+      # Step 5: Linting
       - name: Run Linter (flake8)
         run: |
-          which flake8 \
           flake8 src/ \
           flake8 tests/ \
           flake8 events/ \
