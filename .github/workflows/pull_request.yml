@@ -31,4 +31,6 @@ jobs:
 
       # Step 5: Run Tests
       - name: Run Unit Tests
+        env:
+          SNS_TOPIC_ARN: ${{ secrets.SNS_TOPIC_ARN }}
         run: python3 -m unittest discover -v tests
