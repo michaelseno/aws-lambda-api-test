@@ -1,6 +1,7 @@
 import json
 import requests
 import logging
+from src.notification_service import NotificationService
 
 # Set up logging
 logger = logging.getLogger()
@@ -10,6 +11,7 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     results = []
     status_code = 0
+    sns = NotificationService()
 
     # Check for the 'events' key and ensure it's a list
     events = event.get("events", [])
@@ -54,11 +56,18 @@ def lambda_handler(event, context):
                 "statusCode": 500,
                 "body": {"error": str(e)}
             })
+            sns.publish(
+                subject="Lambda Trigger Error",
+                message=results
+            )
             return {
                 "statusCode": 500,
                 "body": json.dumps({"results": results})
             }
-
+    sns.publish(
+        subject="Lambda Trigger Result",
+        message=results
+    )
     return {
         "statusCode": status_code,
         "body": json.dumps({"results": results})
