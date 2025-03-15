@@ -4,3 +4,5 @@ pytest-mock
 flake8
 black
 bandit
+boto3
+dotenv

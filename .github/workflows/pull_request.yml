@@ -29,6 +29,16 @@ jobs:
         run: |
           flake8 src/ tests/ events/ .github/ lambda_function.py
 
-      # Step 5: Run Tests
+      # Step 5: Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 6: Run Tests
       - name: Run Unit Tests
+        env:
+          SNS_TOPIC_ARN: ${{ secrets.SNS_TOPIC_ARN }}
         run: python3 -m unittest discover -v tests
