@@ -23,4 +23,3 @@ class NotificationService:
     @staticmethod
     def parse_date(date):
         return date.strftime("%Y-%m-%d %H:%M:%S")
-
