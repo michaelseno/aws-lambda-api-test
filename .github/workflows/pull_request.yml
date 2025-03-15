@@ -27,6 +27,7 @@ jobs:
       # Step 4: Linting
       - name: Run Linter (flake8)
         run: |
+          which flake8 \
           flake8 src/ \
           flake8 tests/ \
           flake8 events/ \
