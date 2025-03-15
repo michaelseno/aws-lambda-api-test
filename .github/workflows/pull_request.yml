@@ -20,23 +20,15 @@ jobs:
         with:
           python-version: '3.9'
 
-      # Step 3: Enable virtual env
-      - name: Activate .venv
-        run: source venv/bin/activate
-
-      # Step 4: Install dependencies
+      # Step 3: Install dependencies
       - name: Install Dependencies
         run: python3 -m pip install -r requirements.txt
 
-      # Step 5: Linting
+      # Step 4: Linting
       - name: Run Linter (flake8)
         run: |
-          flake8 src/ \
-          flake8 tests/ \
-          flake8 events/ \
-          flake8 .github/ \
-          flake8 lambda_function.py
+          flake8 src/ tests/ events/ .github/ lambda_function.py
 
-      # Step 6: Run Tests
+      # Step 5: Run Tests
       - name: Run Unit Tests
         run: python3 -m unittest discover -v tests
