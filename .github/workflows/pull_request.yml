@@ -1,0 +1,38 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up the programming language (Python in this case)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      # Step 4: Linting
+      - name: Run Linter (flake8)
+        run: |
+          flake8 src/ \
+          flake8 tests/ \
+          flake8 events/ \
+          flake8 .github/ \
+          flake8 lambda_function.py
+
+      # Step 6: Run Tests
+      - name: Run Unit Tests
+        run: python3 -m unittest discover -v tests
