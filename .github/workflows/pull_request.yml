@@ -22,10 +22,7 @@ jobs:
 
       # Step 3: Enable virtual env
       - name: Activate .venv
-        run: |
-          pwd \
-          ls \
-          source venv/bin/activate
+        run: source venv/bin/activate
 
       # Step 4: Install dependencies
       - name: Install Dependencies
