@@ -6,6 +6,7 @@ This project demonstrates a fully automated API testing framework using GitHub A
 - GitHub Actions
 - AWS Lambda
 - AWS S3
+- AWS CloudWatch
 - AWS EventBridge
 - AWS SNS
 - Python
@@ -19,7 +20,7 @@ The goal of this project was to automate API testing in a CI/CD pipeline, with a
 2. If tests are successful, then the pull request can be merged
 3. once merged, artifact is created and uploaded to S3.
 4. Lambda function is updated and triggered to run the API tests.
-5. EventBridge triggers the Lambda function periodically, and SNS sends notifications based on test results.
+5. EventBridge triggers the Lambda function periodically, Saves the logs into AWS CloudWatch and SNS sends notifications based on test results.
 
 ### Code Samples:
 
