@@ -54,6 +54,7 @@ def lambda_handler(event, context):
             logger.error(f"Error occurred in event {i + 1}: {str(e)}")
             results.append({
                 "statusCode": 500,
+                "url": url,
                 "body": {"error": str(e)}
             })
             sns.publish(
@@ -64,10 +65,7 @@ def lambda_handler(event, context):
                 "statusCode": 500,
                 "body": json.dumps({"results": results})
             }
-    sns.publish(
-        subject="Lambda Trigger Result",
-        message=results
-    )
+
     return {
         "statusCode": status_code,
         "body": json.dumps({"results": results})
