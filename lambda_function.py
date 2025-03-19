@@ -1,72 +1,41 @@
 import json
-import requests
 import logging
+from src.utils import read_file
+from src.api_request import run_tests
 from src.notification_service import NotificationService
 
 # Set up logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+sns = NotificationService()
 
 
 def lambda_handler(event, context):
-    results = []
-    status_code = 0
-    sns = NotificationService()
+    try:
+        if "test_cases" in event:
+            test_cases = event["test_cases"]
+        else:
+            test_cases = read_file()
 
-    # Check for the 'events' key and ensure it's a list
-    events = event.get("events", [])
-    if not isinstance(events, list):
-        logger.error("Invalid input format. Expected 'events' to be a list.")
+        results = run_tests(test_cases=test_cases)
+        logger.info("Test results: %s", json.dumps(results, indent=2))
+
+        success_count = sum(1 for r in results if r["test_result"] == "Passed")
+        failure_count = sum(1 for r in results if r["test_result"] == "Failed")
+        summary = f"API Test Completed: {success_count} Passed, {failure_count} Failed"
+        sns.publish(subject="API Test Results", message=summary)
+
         return {
-            "statusCode": 400,
-            "body": json.dumps({"error": "Invalid input format"})
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "API Test Completed",
+                "results": results,
+            })
         }
 
-    logger.info(f"Received {len(events)} event(s).")
-
-    for i, single_event in enumerate(events):
-        url = single_event.get("url", single_event.get("url"))
-        expected_status = single_event.get("expected_status",
-                                           single_event.get("expected_status"))
-        logger.info(f"Processing event {i + 1}/{len(events)}")
-        logger.info(f"Requesting URL: {url}")
-
-        try:
-            response = requests.get(url)
-            status_code = response.status_code
-            body = response.json()
-
-            logger.info(f"Response status code: {status_code}")
-            logger.info(f"Response body: {json.dumps(body)}")
-
-            result = "Success" if status_code == expected_status else "Failure"
-            logger.info(f"Result for event {i + 1}: {result}")
-            results.append({
-                "statusCode": status_code,
-                "body": {
-                    "result": result,
-                    "url": url,
-                    "response": body
-                }
-            })
-
-        except Exception as e:
-            logger.error(f"Error occurred in event {i + 1}: {str(e)}")
-            results.append({
-                "statusCode": 500,
-                "url": url,
-                "body": {"error": str(e)}
-            })
-            sns.publish(
-                subject="Lambda Trigger Error",
-                message=results
-            )
-            return {
-                "statusCode": 500,
-                "body": json.dumps({"results": results})
-            }
-
-    return {
-        "statusCode": status_code,
-        "body": json.dumps({"results": results})
-    }
+    except Exception as e:
+        logger.error("Error during Lambda execution: %s", str(e))
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }

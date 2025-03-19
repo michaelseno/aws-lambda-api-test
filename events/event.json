@@ -1,7 +1,7 @@
 {
-  "events": [
-    {"use_case": "success", "url": "https://jsonplaceholder.typicode.com/posts/1", "expected_status": 200},
-    {"use_case": "success","url": "https://jsonplaceholder.typicode.com/posts/2", "expected_status": 200},
-    {"use_case": "failure","url": "https://jsonplaceholder.typicode.com/posts/404", "expected_status": 404}
+  "test_cases": [
+    {"use_case": "Success scenario with status code 200", "url": "https://jsonplaceholder.typicode.com/posts/1", "expected_status": 200},
+    {"use_case": "Success scenario with status code 200","url": "https://jsonplaceholder.typicode.com/posts/2", "expected_status": 200},
+    {"use_case": "Failure scenario with status code 404","url": "https://jsonplaceholder.typicode.com/posts/404", "expected_status": 404}
   ]
 }
