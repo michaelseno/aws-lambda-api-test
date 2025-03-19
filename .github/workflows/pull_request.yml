@@ -41,4 +41,4 @@ jobs:
       - name: Run Unit Tests
         env:
           SNS_TOPIC_ARN: ${{ secrets.SNS_TOPIC_ARN }}
-        run: python3 -m unittest discover -v tests
+        run: python3 -m pytest tests/ --junitxml=report.xml
