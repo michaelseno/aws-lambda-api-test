@@ -28,7 +28,8 @@ def run_tests(test_cases):
     for test_case in test_cases:
         response = fetch_data(test_case["url"])
         test_result = "Passed" \
-            if response["status_code"] == test_case["expected_status"] else "Failed"
+            if (response["status_code"] ==
+                test_case["expected_status"]) else "Failed"
         if "Passed" in test_result:
             err = "N/A"
         else:
