@@ -22,7 +22,8 @@ def lambda_handler(event, context):
 
         success_count = sum(1 for r in results if r["test_result"] == "Passed")
         failure_count = sum(1 for r in results if r["test_result"] == "Failed")
-        summary = f"API Test Completed: {success_count} Passed, {failure_count} Failed"
+        summary = (f"API Test Completed: "
+                   f"{success_count} Passed, {failure_count} Failed")
         sns.publish(subject="API Test Results", message=summary)
 
         return {

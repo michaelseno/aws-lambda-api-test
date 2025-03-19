@@ -2,7 +2,7 @@ import json
 
 import boto3
 import os
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from datetime import datetime
 
 

@@ -1,4 +1,3 @@
-import unittest
 import pytest
 from src.api_request import fetch_data
 
