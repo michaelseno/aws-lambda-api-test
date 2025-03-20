@@ -7,10 +7,10 @@ from src.notification_service import NotificationService
 # Set up logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-sns = NotificationService()
 
 
 def lambda_handler(event, context):
+    sns = NotificationService()
     try:
         if "test_cases" in event:
             test_cases = event["test_cases"]
